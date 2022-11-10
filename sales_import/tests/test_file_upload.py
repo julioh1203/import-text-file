@@ -36,7 +36,7 @@ class FileImportFormTest(TestCase):
         result = Sale.objects.all().count()
         self.assertEqual(result, 0)
 
-    def test_correct_format(self):
+    def test_upload_and_savecorrect_format(self):
         text_file = self.create_text_file_correct_format()
         with open(text_file, 'r') as fp:
             self.client.post('/sales/upload/', {'file': fp})
