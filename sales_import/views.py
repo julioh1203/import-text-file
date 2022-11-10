@@ -48,3 +48,17 @@ def upload_file(request):
     else:
         form = FileImportForm()
         return render(request, 'sales_import/upload.html', {'form': form})
+
+
+def report_all_sales(request):
+    sales_qs = Sale.objects.all().values('buyer', 'description', 'unit_price', 'amount', 'address', 'supplier')
+
+    table_columns = ['Comprador', 'Descrição', 'Preço Unitário', 'Quantidade', 'Endereço', 'Fornecedor']
+    pd.set_option('colheader_justify', 'left')
+    df = pd.DataFrame.from_records(sales_qs)
+    df.columns = table_columns
+
+    total_sales = df['Preço Unitário'].sum()
+
+    sales = df.to_html(index=False, classes="table table-striped", border=None)
+    return render(request, 'sales_import/report_all_sales.html', {'sales': sales, 'total_sales': total_sales})

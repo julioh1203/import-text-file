@@ -7,7 +7,7 @@ from sales_import.forms import FileImportForm
 from sales_import.models import Sale
 
 
-class FileImportFormTest(TestCase):
+class TestFileUpload(TestCase):
     def setUp(self) -> None:
         self.form = FileImportForm()
         self.client = Client()
