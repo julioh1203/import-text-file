@@ -36,10 +36,13 @@ def upload_file(request):
 
             os.remove(text_file)
 
-            pd.set_option('colheader_justify', 'center')
-            last_imported_saled = df.to_html(index=False)
+            total_sales = df['Preço Unitário'].sum()
 
-            return render(request, 'sales_import/list_imports.html', {'last_imported_saled': last_imported_saled})
+            pd.set_option('colheader_justify', 'left')
+            last_imported_sales = df.to_html(index=False, classes="table table-striped", border=None)
+
+            return render(request, 'sales_import/list_imports.html',
+                          {'last_imported_sales': last_imported_sales, 'total_sales': total_sales})
         else:
             return HttpResponse(request, form.errors)
     else:
