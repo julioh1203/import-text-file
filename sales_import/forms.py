@@ -1,15 +1,19 @@
-from django.core.exceptions import ValidationError
+import mimetypes
+
 from django.forms import forms
 
 
-def validate_file(file_uploaded):
-    content_types = ['text/plain']
-    if file_uploaded.content_type not in content_types:
-        raise ValidationError('Invalid file format!')
-    return file_uploaded
-
-
 class FileImportForm(forms.Form):
-    file = forms.FileField(help_text='Only text file is accepted.', required=True, validators=[validate_file])
+    file = forms.FileField(help_text='Only text file is accepted.', required=True)
 
-    # validators=[FileTypeValidator(allowed_types=['text/plain'])])
+    def clean_file(self):
+        valid_content_types = ['text/plain']
+
+        uploaded_file = self.cleaned_data['file']
+
+        file_mime_type = mimetypes.guess_type(uploaded_file.name)[0]
+
+        if file_mime_type not in valid_content_types:
+            raise forms.ValidationError('Invalid file format!', code='invalid')
+
+        return uploaded_file
