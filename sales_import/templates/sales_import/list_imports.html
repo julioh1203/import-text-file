@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block body %}
+
+    <h2>Last Imported Sales</h2>
+
+    <span style="padding: 1px;"></span>
+
+    {{ last_imported_sales | safe }}
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Total Sales: {{ total_sales }}</h5>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+volumes:
+  importation_static:
+    name: importation_static
+
+services:
+  django:
+    image: compose-importation:latest
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    expose:
+      - 8000
+    volumes:
+      - "importation_static:/static"
+    env_file: .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=importation.settings
+      - PYTHONPATH=/app
+      - PATH="${PATH}:/home/python/.local/bin"
+
+  importation_nginx:
+    image: nginx:1.23.2-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - "importation_static:/usr/share/nginx/html"
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf:z"
+    depends_on:
+      - django
